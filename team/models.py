@@ -5,6 +5,7 @@ class Team(models.Model):
     name = models.CharField(max_length=200)
     members = models.ManyToManyField(
         CustomUser,
+        #related_name='members',
         through='Membership',
         through_fields=('team', 'user'),
     )
@@ -14,4 +15,4 @@ class Team(models.Model):
     
 class Membership(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="members")
