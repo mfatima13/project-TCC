@@ -23,7 +23,9 @@ class UserlistCreate(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def createUser(self, request):
         serializer = CustomUserSerializer(request.data)
+        
         if serializer.is_valid():
+
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -51,3 +53,5 @@ class UserUpdateDelete(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 '''
+class MembersListCreate(viewsets.ModelViewSet):
+    pass
