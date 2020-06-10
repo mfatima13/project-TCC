@@ -5,7 +5,7 @@ from account.models import CustomUser
 from account.serializers import CustomUserSerializer
 
 class TeamSerializer(serializers.ModelSerializer):
-    members = serializers.StringRelatedField(many=True)
+    members = serializers.StringRelatedField(many=True, read_only=False)
 
     class Meta:
         model = Team
@@ -18,8 +18,8 @@ class TeamSerializer(serializers.ModelSerializer):
         ]
 
 class MembershipSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(many=True)
-    team = serializers.StringRelatedField(many=True)
+    #user = serializers.StringRelatedField(many=True, read_only=False)
+    #team = serializers.StringRelatedField(many=True, read_only=False)
 
     class Meta:
         model = Membership
