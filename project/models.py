@@ -13,8 +13,8 @@ class ToDo(models.Model):
         related_name='toDo',
         on_delete=models.CASCADE,
     )
-    initDate = models.DateField(auto_now_add=True, blank=True, null=True)
-    endDate = models.DateField(auto_now_add=False, blank=True, null=True)
+    initDate = models.DateField(auto_now_add=True)
+    endDate = models.DateField()
 
     def __str__(self):
         return self.name    
@@ -29,9 +29,9 @@ class Task(models.Model):
         related_name='tasks',
         on_delete=models.CASCADE,
     )
-    order = models.IntegerField(default=1)
+    order = models.IntegerField()
 
-    object = TaskManager()
+    objects = TaskManager()
 
     class Meta:
         index_together = ('toDo', 'order')

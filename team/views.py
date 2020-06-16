@@ -55,10 +55,18 @@ class TeamDeleteUpdate(viewsets.ModelViewSet):
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class Members(viewsets.ModelViewSet):
+class MembersListCreate(viewsets.ModelViewSet):
     queryset = Membership.objects.all()
     serializer_class = MembershipSerializer
     permission_classes = [permissions.IsAuthenticated, permissions.AllowAny]
+
+    @action(detail=True, methods=['get'])
+    def listItens(self, request, pk, format=None):
+        print('\n')
+        print(pk)
+        print(request.query.pk)
+        data = Membership.objects.filter(team=pk)
+        return Response(serializer(data))
 
     def post(self, request, format=None):
         serializer = MembershipSerializer(data=request.data)
@@ -67,3 +75,13 @@ class Members(viewsets.ModelViewSet):
             serializer.save()
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MembersDeleteUpdate(viewsets.ModelViewSet):
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
+    permission_classes = [permissions.IsAuthenticated, permissions.AllowAny]
+
+    @action(detail=True, methods=['get'])
+    def member_by_user(self, request):
+        print(request.query.team)
+        #data = queryset.filter('team'==request.query.team)
