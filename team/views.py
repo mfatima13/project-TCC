@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.utils.datetime_safe import new_datetime
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, views
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.decorators import action 
+from rest_framework.decorators import action
 
 from account.models import CustomUser
 
@@ -11,77 +11,97 @@ from .models import Team, Membership
 
 from .serializers import MembershipSerializer, TeamSerializer
 
+from rest_framework import authentication, permissions
 
 class TeamListCreate(viewsets.ModelViewSet):
-    queryset = Team.objects.all().order_by('-create_date', '-modify_date')
-    serializer_class = TeamSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny]
+	queryset = Team.objects.all().order_by('-create_date', '-modify_date')
+	serializer_class = TeamSerializer
+	permission_classes = [
+		permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny
+	]
 
-    @action(detail=True, methods=['get'])
-    def listTeams(self):
-        return self.objects.all()
+	@action(detail=True, methods=['get'])
+	def listTeams(self):
+		return self.objects.all()
 
-    @action(detail=True, methods=['post'])
-    def createTeam(self, request):
-        members = CustomUser.objects.filter(pk = request.data.members)
-        teamName = request.data.name
+	@action(detail=True, methods=['post'])
+	def createTeam(self, request):
+		members = CustomUser.objects.filter(pk=request.data.members)
+		teamName = request.data.name
 
-        serializer = TeamSerializer(request.data)
-        if serializer.is_valid():
-            #Membership.objects.create(team=, user=)
-            serializer.save()
-            print(team)
-            return Response(status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		serializer = TeamSerializer(request.data)
+		if serializer.is_valid():
+			# Membership.objects.create(team=, user=)
+			serializer.save()
+			print(team)
+			return Response(status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TeamDeleteUpdate(viewsets.ModelViewSet):
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.AllowAny]
+	queryset = Team.objects.all()
+	serializer_class = TeamSerializer
+	permission_classes = [
+		permissions.AllowAny, 
+	]
 
-    @action(detail=True, methods=['put'])
-    def updateTeam(self, request):
-  #      date = new_datetime
- #       print(date)
-        '''TeamSerializer(data={
-            request.data.name,
-            request.data.create-date,
-            date,
-            request.data.members,
-        })'''
-        serializer = TeamSerializer(request.data)
-        if serializer.is_valid():
-            serializer.update()
-            return Response(status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	@action(detail=True, methods=['put'])
+	def updateTeam(self, request):
+	  #      date = new_datetime
+	 #       print(date)
+		'''TeamSerializer(data={
+			request.data.name,
+			request.data.create-date,
+			date,
+			request.data.members,
+		})'''
+		serializer = TeamSerializer(request.data)
+		if serializer.is_valid():
+			serializer.update()
+			return Response(status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class MembersListCreate(viewsets.ModelViewSet):
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.AllowAny]
 
-    @action(detail=True, methods=['get'])
-    def listItens(self, request, pk, format=None):
-        print('\n')
-        print(pk)
-        print(request.query.pk)
-        data = Membership.objects.filter(team=pk)
-        return Response(serializer(data))
+class MembersLC(viewsets.ModelViewSet):
+	queryset = Membership.objects.all()
 
-    def post(self, request, format=None):
-        serializer = MembershipSerializer(data=request.data)
+	serializer_class = MembershipSerializer
+	permission_classes = [
+		permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny, 
+	]
+	
+	@action(detail=True, methods=['get'])
+	def members_list(self, request, pk, format=None):
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		data = Membership.objects.get()
+		return Response(data, status=status.HTTP_201_CREATED)
+
+	@action(detail=True, methods=['post'], )
+	def members_create(self, request, format=None):
+	
+		serializer = MembershipSerializer(data=request.data)
+
+		if serializer.is_valid():
+			serializer.save()
+			return Response(status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class MembersDeleteUpdate(viewsets.ModelViewSet):
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.AllowAny]
+	queryset = Membership.objects.all()
+	serializer_class = MembershipSerializer
+	permission_classes = [permissions.IsAuthenticated, permissions.AllowAny]
 
-    @action(detail=True, methods=['get'])
-    def member_by_user(self, request):
-        print(request.query.team)
-        #data = queryset.filter('team'==request.query.team)
+	@action(detail=True, methods=['get'])
+	def member_by_user(self, request):
+		print(request.query.team)
+		# data = queryset.filter('team'==request.query.team)
+
+	def put(self, request, format=None):
+
+		serializer = MembershipSerializer(data=request.data)
+
+		if serializer.is_valid():
+			serializer.update()
+			return Response(status=status.HTTP_202_ACCEPTED)
+
+		return Response(erializer.errors, status=status.HTTP_400_BAD_REQUEST)

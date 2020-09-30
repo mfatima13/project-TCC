@@ -29,7 +29,7 @@ class Task(models.Model):
         related_name='tasks',
         on_delete=models.CASCADE,
     )
-    order = models.IntegerField()
+    order = models.IntegerField(null=True, blank=True)
 
     objects = TaskManager()
 
