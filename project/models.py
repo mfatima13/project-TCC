@@ -20,7 +20,7 @@ class ToDo(models.Model):
         return self.name    
 
 class Task(models.Model):
-    name = models.CharField(max_length=300)
+    name = models.CharField(max_length=300, null=False)
     description = models.TextField(max_length=800, blank=True)
     completed = models.BooleanField(default=False, blank=True, null=True)
     priority = models.CharField(max_length=10)

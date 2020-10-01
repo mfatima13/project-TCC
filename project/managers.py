@@ -83,7 +83,7 @@ class TaskManager(models.Manager):
             # Increment and use it for our new object 
             current_order = results['order__max']
             print('\nhere \n', current_order)
-            if current_order is null: 
+            if current_order is None: 
                 current_order = 0
 
             value = current_order + 1 
