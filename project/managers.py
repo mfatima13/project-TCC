@@ -6,6 +6,7 @@ class TaskManager(models.Manager):
 
     def move(self, obj, new_order, toDo):
         """ mode an objects to a new order position """
+        print(obj, new_order, toDo)
         qs = self.get_queryset()
 
         with transaction.atomic():
@@ -47,8 +48,8 @@ class TaskManager(models.Manager):
                 if obj.order > int(new_order):
                     qs.filter(
                         toDo=toDo,
-                        order__lt=obj.order, 
-                        order__gte=new_order, 
+                        order__lte=obj.order, 
+                        order__gt=new_order, 
                     ).exclude(
                         pk=obj.pk
                     ).update(

@@ -11,7 +11,7 @@ class TaskView(viewsets.ModelViewSet):
 	queryset = Task.objects.all().order_by('order')
 	serializer_class = TaskSerializer
 	filter_backends = (DjangoFilterBackend, ) 
-	filter_fields = ('toDo', ) 
+	filter_fields = ('toDo', )
 
 	@action(methods=['post'], detail=True)
 	def post(self, request):
@@ -28,6 +28,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 	serializer_class = TaskSerializer
 	filter_backends = (DjangoFilterBackend, ) 
 	filter_fields = ('toDo', ) 
+	#permission_classes = []
 
 	@action(methods=['get'], detail=True)
 	def taskList(self, request):
@@ -39,26 +40,32 @@ class TaskViewSet(viewsets.ModelViewSet):
 	def move(self, request, pk): 
 		""" Move a single Step to a new position """ 
 		obj = self.get_object() 
+		print("obj: ", obj)
 		new_order = request.data.get('order', None) 
+		toDo_target = request.data.get('toDo', None)
 
 		# Make sure we received an order  
-		if new_order is None: 
+		if new_order is None and toDo_target is None: 
 			return Response( 
-				data={'error': 'No order given'},
+				data={'error': 'No order or toDo given'},
 				status=status.HTTP_400_BAD_REQUEST, 
 			) 
 		
 		# Make sure our new order is not below one 
-		if int(new_order) < 1: 
+		if int(new_order) < 1 and int(toDo_target) < 1: 
 			return Response( 
-				data={'error': 'Order cannot be zero or below'},
+				data={'error': 'Order nd toDo cannot be zero or below'},
 				status=status.HTTP_400_BAD_REQUEST, 
 			)
 		
-		Task.objects.move(obj, new_order) 
+		Task.objects.move(obj, new_order, toDo_target) 
 		return Response({'success': True, 'order': new_order})
 
 
+# Create order in toDo
 class TodoViewSet(viewsets.ModelViewSet):
 	queryset = ToDo.objects.all()
 	serializer_class = ToDoSerializer
+	filter_backends = (DjangoFilterBackend, ) 
+	
+	filter_fields = ('group', )
