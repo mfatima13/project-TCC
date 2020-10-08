@@ -11,9 +11,9 @@ class TaskManager(models.Manager):
 
         with transaction.atomic():
 
-            if obj.toDo != toDo:
+            if obj.toDo.pk != toDo:
                 qs.filter(
-                        toDo=obj.toDo,
+                        toDo=obj.toDo.pk,
                         order__lt=obj.order, 
                         order__gte=new_order, 
                     ).exclude(
@@ -67,7 +67,7 @@ class TaskManager(models.Manager):
                     )
 
             obj.order = new_order
-            obj.toDo = toDo
+            obj.toDo.pk = toDo
             obj.save()
 
     def create(self, **kwargs):

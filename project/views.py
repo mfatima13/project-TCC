@@ -39,10 +39,14 @@ class TaskViewSet(viewsets.ModelViewSet):
 	@action(methods=['post'], detail=True) 
 	def move(self, request, pk): 
 		""" Move a single Step to a new position """ 
-		obj = self.get_object() 
+		print("pk: ", pk)
+		obj = self.get_object()
 		print("obj: ", obj)
+		params = request.data
+		print(params)
 		new_order = request.data.get('order', None) 
 		toDo_target = request.data.get('toDo', None)
+		print("task toDo:", obj.toDo.pk)
 
 		# Make sure we received an order  
 		if new_order is None and toDo_target is None: 
