@@ -39,30 +39,27 @@ class TaskViewSet(viewsets.ModelViewSet):
 	@action(methods=['post'], detail=True) 
 	def move(self, request, pk): 
 		""" Move a single Step to a new position """ 
-		print("pk: ", pk)
 		obj = self.get_object()
-		print("obj: ", obj)
-		params = request.data
-		print(params)
+		#params = request.data
 		new_order = request.data.get('order', None) 
 		toDo_target = request.data.get('toDo', None)
-		print("task toDo:", obj.toDo.pk)
 
+		toDo = ToDo.objects.filter(pk=toDo_target).get()
 		# Make sure we received an order  
-		if new_order is None and toDo_target is None: 
+		if new_order is None and toDo is None: 
 			return Response( 
 				data={'error': 'No order or toDo given'},
 				status=status.HTTP_400_BAD_REQUEST, 
 			) 
 		
 		# Make sure our new order is not below one 
-		if int(new_order) < 1 and int(toDo_target) < 1: 
+		if int(new_order) < 1: 
 			return Response( 
 				data={'error': 'Order nd toDo cannot be zero or below'},
 				status=status.HTTP_400_BAD_REQUEST, 
 			)
 		
-		Task.objects.move(obj, new_order, toDo_target) 
+		Task.objects.move(obj, new_order, toDo) 
 		return Response({'success': True, 'order': new_order})
 
 

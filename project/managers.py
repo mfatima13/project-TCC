@@ -8,48 +8,63 @@ class TaskManager(models.Manager):
         """ mode an objects to a new order position """
         print(obj, new_order, toDo)
         qs = self.get_queryset()
+        print(qs)
 
         with transaction.atomic():
 
-            if obj.toDo.pk != toDo:
+            if obj.toDo.pk != toDo.pk: # nesso caso não precisa alterar a ordem com base no ordem anterior, so colocar o novo valor e alterar o elementos seguintes
+                print("entrou")
                 qs.filter(
+                        toDo=obj.toDo.pk, #Alterar essa logica, pq tenho que alterar o ToDo anterior para o novo
+                        order__gt=obj.order,
+                    ).exclude(
+                        pk=obj.pk,
+                        toDo=obj.toDo.pk
+                    ).update(
+                        order=F('order') - 1,
+                    )
+                print(qs)
+                 
+                qs.filter(
+                        toDo=toDo, 
+                        order__lt=new_order, 
+                    ).exclude(
+                        pk=obj.pk
+                    ).update(
+                        order=F('order') + 1,
+                        toDo=toDo.pk,
+                    )
+                #continua aqui
+                if obj.order > int(new_order):
+                    qs.filter(
+                        toDo=toDo.pk, 
+                        order__gte=new_order, 
+                    ).exclude(
+                        pk=obj.pk
+                    ).update(
+                        order=F('order') + 1,
+                    )
+                    print('if 01: ',qs)
+                else:
+                    qs.filter(
+                        toDo=toDo,
+                        order__lte=new_order,
+                        order__gt=obj.order,
+                    ).exclude(
+                        pk=obj.pk,
+                    ).update(
+                        toDo=toDo,
+                        order=F('order') - 1,
+                    )
+                    print('if 02: ',qs)
+
+            else:#ok aqui
+
+                if obj.order > int(new_order):
+                    qs.filter(
                         toDo=obj.toDo.pk,
-                        order__lt=obj.order, 
-                        order__gte=new_order, 
-                    ).exclude(
-                        pk=obj.pk
-                    ).update(
-                        order=F('order') - 1,
-                    )
-                
-                if obj.order > int(new_order):
-                    qs.filter(
-                        toDo=toDo,
-                        order__lt=obj.order, 
-                        order__gte=new_order, 
-                    ).exclude(
-                        pk=obj.pk
-                    ).update(
-                        order=F('order') + 1,
-                    )
-                else:
-                    qs.filter(
-                        toDo=toDo,
-                        order__lte=new_order,
-                        order__gt=obj.order,
-                    ).exclude(
-                        pk=obj.pk,
-                    ).update(
-                        order=F('order') - 1,
-                    )
-
-            else:
-
-                if obj.order > int(new_order):
-                    qs.filter(
-                        toDo=toDo,
                         order__lte=obj.order, 
-                        order__gt=new_order, 
+                        order__gte=new_order, 
                     ).exclude(
                         pk=obj.pk
                     ).update(
@@ -57,7 +72,7 @@ class TaskManager(models.Manager):
                     )
                 else:
                     qs.filter(
-                        toDo=toDo,
+                        toDo=obj.toDo.pk,
                         order__lte=new_order,
                         order__gt=obj.order,
                     ).exclude(
@@ -65,9 +80,9 @@ class TaskManager(models.Manager):
                     ).update(
                         order=F('order') - 1,
                     )
-
+                    
             obj.order = new_order
-            obj.toDo.pk = toDo
+            obj.toDo = toDo
             obj.save()
 
     def create(self, **kwargs):
