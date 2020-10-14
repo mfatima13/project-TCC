@@ -23,7 +23,6 @@ class TaskSerializer(serializers.ModelSerializer):
         task = Task.objects.create(toDo=todo, **validated_data)
         return task
 
-
 class ToDoSerializer(serializers.ModelSerializer):
     #group = serializers.StringRelatedField(many=True, )
     #group = serializers.

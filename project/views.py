@@ -6,23 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import ToDo, Task
 from .serializers import TaskSerializer, ToDoSerializer
-
-class TaskView(viewsets.ModelViewSet):
-	queryset = Task.objects.all().order_by('order')
-	serializer_class = TaskSerializer
-	filter_backends = (DjangoFilterBackend, ) 
-	filter_fields = ('toDo', )
-
-	@action(methods=['post'], detail=True)
-	def post(self, request):
-		print(request.data)
-		serializer = serialize_class(request.data)
-
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+	
 class TaskViewSet(viewsets.ModelViewSet):
 	queryset = Task.objects.all().order_by('order')
 	serializer_class = TaskSerializer
@@ -30,11 +14,15 @@ class TaskViewSet(viewsets.ModelViewSet):
 	filter_fields = ('toDo', ) 
 	#permission_classes = []
 
-	@action(methods=['get'], detail=True)
-	def taskList(self, request):
-		qs = queryset.filter('toDo' == request.query.get('toDo', None))
-		print(request.query.toDo)
-		return Response(serializer(qs), status=status.HTTP_200_OK)
+	@action(methods=['delete'], detail=False)#url_path='change-password', url_name='change_password'
+	def delete(self, request, pk):
+		task = queryset.filter(pk=pk).get()
+		print('\npk: ', pk)
+		try:
+			task.objects.delete()
+			return Response(status=status.HTTP_204_NO_CONTENT)
+		except:
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 
 	@action(methods=['post'], detail=True) 
 	def move(self, request, pk): 

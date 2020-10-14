@@ -6,7 +6,6 @@ from project import views
 
 router = SimpleRouter()
 router.register('task', views.TaskViewSet)
-router.register('task-create', views.TaskView)
 router.register('todos', views.TodoViewSet)
 
 urlpatterns = [
