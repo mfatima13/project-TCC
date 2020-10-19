@@ -24,7 +24,13 @@ class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
         fields = [
+            'id',
             'team',
-            'user'
+            'user',
         ]
-        
+    
+    def update(self, validated_data):
+
+        team = validated_data.pop('team')
+        user
+        member = Membership.objects.update(team, )

@@ -1,10 +1,11 @@
 from django.db import models
 
-from team.models import Team, Membership
+from team.models import Team
 
-from .managers import TaskManager
+from .managers import TaskManager, ToDoManager
 
 # Create your models here.
+
 
 class ToDo(models.Model):
     name = models.CharField(max_length=300)
@@ -16,8 +17,16 @@ class ToDo(models.Model):
     initDate = models.DateField(auto_now_add=True)
     endDate = models.DateField()
 
+    order = models.IntegerField(null=True, blank=True)
+
+    objects = ToDoManager()
+
+    class Meta:
+        index_together = ('group', 'order')
+
     def __str__(self):
-        return self.name    
+        return self.name
+
 
 class Task(models.Model):
     name = models.CharField(max_length=300, null=False)

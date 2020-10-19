@@ -1,8 +1,30 @@
 from django.db import models, transaction
 from django.db.models import F, Max
 
+
 class ToDoManager(models.Manager):
-    pass
+
+    def create(self, **kwargs):
+        instance = self.model(**kwargs)
+
+        with transaction.atomic():
+            # Get our current max order number
+            results = self.filter(
+                group=instance.group
+            ).aggregate(
+                Max('order')
+            )
+
+            # Increment and use it for our new object
+            current_order = results['order__max']
+            if current_order is None:
+                current_order = 0
+
+            value = current_order + 1
+            instance.order = value
+            instance.save()
+            return instance
+
 
 class TaskManager(models.Manager):
     """ Magener to encapsulate bits of business logic """
@@ -15,28 +37,28 @@ class TaskManager(models.Manager):
 
         with transaction.atomic():
 
-            if obj.toDo.pk != toDo.pk: # nesso caso não precisa alterar a ordem com base no ordem anterior, so colocar o novo valor e alterar o elementos seguintes
+            if obj.toDo.pk != toDo.pk:  # nesse momento é inserido o novo item, incrementando os demais
                 print("entrou")
                 qs.filter(
-                        toDo=obj.toDo.pk, #Alterar essa logica, pq tenho que alterar o ToDo anterior para o novo
-                        order__gt=obj.order,
-                    ).exclude(
-                        pk=obj.pk,
-                    ).update(
-                        order=F('order') - 1,
-                    )
+                    toDo=obj.toDo.pk,
+                    order__gt=obj.order,
+                ).exclude(
+                    pk=obj.pk,
+                ).update(
+                    order=F('order') - 1,
+                )
                 print(qs)
-                 
-                qs.filter(
-                        toDo=toDo, 
-                        order__gte=new_order, 
-                    ).exclude(
-                        pk=obj.pk
-                    ).update(
-                        order=F('order') + 1,
-                    )#continuar testando
 
-                #continua aqui
+                qs.filter(
+                    toDo=toDo,
+                    order__gte=new_order,
+                ).exclude(
+                    pk=obj.pk
+                ).update(
+                    order=F('order') + 1,
+                )  # continuar testando
+
+                # continua aqui
                 """if obj.order > int(new_order):
                     qs.filter(
                         toDo=toDo, 
@@ -60,13 +82,13 @@ class TaskManager(models.Manager):
                     )
                     print('if 02: ',qs)"""
 
-            else:#ok aqui
+            else:
 
                 if obj.order > int(new_order):
                     qs.filter(
                         toDo=obj.toDo.pk,
-                        order__lte=obj.order, 
-                        order__gte=new_order, 
+                        order__lte=obj.order,
+                        order__gte=new_order,
                     ).exclude(
                         pk=obj.pk
                     ).update(
@@ -82,7 +104,7 @@ class TaskManager(models.Manager):
                     ).update(
                         order=F('order') - 1,
                     )
-                    
+
             obj.order = new_order
             obj.toDo = toDo
             obj.save()
@@ -92,29 +114,28 @@ class TaskManager(models.Manager):
 
         with transaction.atomic():
             # Get our current max order number
-            results = self.filter( 
-                toDo=instance.toDo 
-            ).aggregate( 
-                Max('order') 
-            ) 
+            results = self.filter(
+                toDo=instance.toDo
+            ).aggregate(
+                Max('order')
+            )
 
-            # Increment and use it for our new object 
+            # Increment and use it for our new object
             current_order = results['order__max']
-            if current_order is None: 
+            if current_order is None:
                 current_order = 0
 
-            value = current_order + 1 
-            instance.order = value 
-            instance.save() 
+            value = current_order + 1
+            instance.order = value
+            instance.save()
             return instance
-
 
     def delete(self, **kwargs):
         instance = self.model(**kwargs)
 
         with transaction.atomic():
             # Get our current max order number
-            results = self.filter( 
+            self.filter(
                 toDo=instance.toDo,
                 order__gte=instance.order,
             ).exclude(
@@ -124,4 +145,5 @@ class TaskManager(models.Manager):
             )
 
             instance.delete()
-            return instance
+            print()
+            return {"instance deleted"}

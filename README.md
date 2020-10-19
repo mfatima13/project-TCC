@@ -1,8 +1,17 @@
-#Project API djngo rest TCC
+# Project API djngo rest TCC
 
-##routers:
+Projeto de TCC onde desenvolvi um sistema de gerenciamento de projetos baseado em conceitos dos Scrum e do Kanban. 
 
-Admin -> 'admin/'
+
+## **Sumario** <br>
+* Instalação
+* Rotas da aplicação
+
+<hr />
+
+## Rotas da aplicação:
+
+`Admin` -> 'admin/'
 
 Accounts:
 "accounts-api/"
