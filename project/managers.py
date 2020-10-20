@@ -12,8 +12,8 @@ class ToDoManager(models.Manager):
 
                 qs.filter(
                     group=obj.group,
-                    order__gte=obj.order,
-                    # order__lt=new_order,
+                    order__lt=obj.order,
+                    order__gte=new_order,
                 ).exclude(
                     pk=obj.pk,
                 ).update(
@@ -22,8 +22,8 @@ class ToDoManager(models.Manager):
             else:
                 qs.filter(
                     group=obj.group,
-                    # order__lt=new_order,
-                    order__gte=obj.order,
+                    order__lte=new_order,
+                    order__gt=obj.order,
                 ).exclude(
                     pk=obj.pk,
                 ).update(
@@ -86,38 +86,14 @@ class TaskManager(models.Manager):
                     pk=obj.pk
                 ).update(
                     order=F('order') + 1,
-                )  # continuar testando
-
-                # continua aqui
-                """if obj.order > int(new_order):
-                    qs.filter(
-                        toDo=toDo, 
-                        order__gte=new_order, 
-                    ).exclude(
-                        pk=obj.pk
-                    ).update(
-                        order=F('order') + 1,
-                    )
-                    print('if 01: ',qs)
-                else:
-                    qs.filter(
-                        toDo=toDo,
-                        order__lte=new_order,
-                        order__gt=obj.order,
-                    ).exclude(
-                        pk=obj.pk,
-                    ).update(
-                        toDo=toDo,
-                        order=F('order') - 1,
-                    )
-                    print('if 02: ',qs)"""
+                )
 
             else:
 
                 if obj.order > int(new_order):
                     qs.filter(
                         toDo=obj.toDo.pk,
-                        order__lte=obj.order,
+                        order__lt=obj.order,
                         order__gte=new_order,
                     ).exclude(
                         pk=obj.pk

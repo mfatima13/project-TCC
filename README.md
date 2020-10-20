@@ -17,10 +17,13 @@ Projeto de TCC onde desenvolvi um sistema de gerenciamento de projetos baseado e
 - [ ] Cadastro de projetos
 - [ ] Cadastro de listas de tarefas
 - [ ] Cadastro de tarefas 
-- [ ] Movimentar listas de tarefas para diferentes ordens
-- [ ] Movimentar as tarefas em direfentes posições e diferentes listas
+- [ ] Movimentar listas de tarefas para diferentes ordens (DragInDrop)
+- [ ] Movimentar as tarefas em direfentes posições e diferentes listas (DragInDrop)
 
 ## Tecnologias
+
+* Python 3.8.5 <br>
+* Django 3.0.5
 
 ## Instalação
 
