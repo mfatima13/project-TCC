@@ -4,10 +4,25 @@ Projeto de TCC onde desenvolvi um sistema de gerenciamento de projetos baseado e
 
 
 ## **Sumario** <br>
-* Instalação
-* Rotas da aplicação
+* [Features](#Features)
+* [Tecnologias](#Tecnologias)
+* [Instalação](#Instalação)
+* [Rotas da aplicação](#Rotas-da-aplicação)
 
 <hr />
+
+## Features
+
+- [x] Cadastro de usuário
+- [ ] Cadastro de projetos
+- [ ] Cadastro de listas de tarefas
+- [ ] Cadastro de tarefas 
+- [ ] Movimentar listas de tarefas para diferentes ordens
+- [ ] Movimentar as tarefas em direfentes posições e diferentes listas
+
+## Tecnologias
+
+## Instalação
 
 ## Rotas da aplicação:
 

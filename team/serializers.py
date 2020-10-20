@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from .models import Team, Membership
-from account.models import CustomUser
-from account.serializers import CustomUserSerializer
+
 
 class TeamSerializer(serializers.ModelSerializer):
     members = serializers.StringRelatedField(many=True, read_only=True, )
@@ -17,9 +16,10 @@ class TeamSerializer(serializers.ModelSerializer):
             'members'
         ]
 
+
 class MembershipSerializer(serializers.ModelSerializer):
-    #user = serializers.StringRelatedField(many=True, read_only=False)
-    #team = serializers.StringRelatedField(many=True, read_only=True, )
+    # user = serializers.StringRelatedField(many=True, read_only=False)
+    # team = serializers.StringRelatedField(many=True, read_only=True, )
 
     class Meta:
         model = Membership
@@ -28,9 +28,6 @@ class MembershipSerializer(serializers.ModelSerializer):
             'team',
             'user',
         ]
-    
-    def update(self, validated_data):
 
-        team = validated_data.pop('team')
-        user
-        member = Membership.objects.update(team, )
+    def update(self, validated_data):
+        pass

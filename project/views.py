@@ -14,11 +14,10 @@ class TaskViewSet(viewsets.ModelViewSet):
     filter_fields = ('toDo', )
     # permission_classes = []
 
-    # @action(methods=['delete'], detail=True)#url_path='change-password', url_name='change_password'
+    # @action(methods=['delete'], detail=True)
     """def destroy(self, request, pk):
-		task = Task.objects.delete(pk)
-		
-    	return Response({"ok":""}, status=status.HTTP_202_ACCEPTED)	"""
+        task = Task.objects.delete(pk)
+        return Response({"ok":""}, status=status.HTTP_202_ACCEPTED)	"""
 
     @action(methods=['post'], detail=True)
     def move(self, request, pk):
@@ -49,8 +48,31 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 # Create order in toDo
 class TodoViewSet(viewsets.ModelViewSet):
-    queryset = ToDo.objects.all()
+    queryset = ToDo.objects.all().order_by('order')
     serializer_class = ToDoSerializer
     filter_backends = (DjangoFilterBackend, )
 
     filter_fields = ('group', )
+
+    @action(methods=['post'], detail=True)
+    def move(self, request, pk):
+        """ Move a single Step to a new position """
+        obj = self.get_object()
+        # params = request.data
+        new_order = request.data.get('order', None)
+
+        if new_order is None:
+            return Response(
+                data={'error': 'No order or toDo given'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Make sure our new order is not below one
+        if int(new_order) < 1:
+            return Response(
+                data={'error': 'Order nd toDo cannot be zero or below'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        ToDo.objects.move(obj, new_order)
+        return Response({'success': True, 'order': new_order})

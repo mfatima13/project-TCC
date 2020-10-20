@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
 from .models import Task, ToDo
-from team.models import Team
-from team.serializers import TeamSerializer
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    #toDo = ToDoSerializer()
+    # toDo = ToDoSerializer()
 
     class Meta:
         model = Task
@@ -28,10 +26,24 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class ToDoSerializer(serializers.ModelSerializer):
-    #group = serializers.StringRelatedField(many=True, )
+    # group = serializers.StringRelatedField(many=True, )
     # group = serializers.
     tasks = TaskSerializer(many=True, read_only=True)
 
     class Meta:
         model = ToDo
-        fields = ['id', 'name', 'group', 'initDate', 'endDate', 'tasks']
+        fields = [
+            'id',
+            'name',
+            'group',
+            'initDate',
+            'endDate',
+            'order',
+            'tasks'
+        ]
+
+    def create(self, validated_data):
+        print("hellooo")
+        group = validated_data.pop('group')
+        toDo = ToDo.objects.create(group=group, **validated_data)
+        return toDo

@@ -4,6 +4,35 @@ from django.db.models import F, Max
 
 class ToDoManager(models.Manager):
 
+    def move(self, obj, new_order):
+        qs = self.get_queryset()
+
+        with transaction.atomic():
+            if obj.order > int(new_order):
+
+                qs.filter(
+                    group=obj.group,
+                    order__gte=obj.order,
+                    # order__lt=new_order,
+                ).exclude(
+                    pk=obj.pk,
+                ).update(
+                    order=F('order') + 1,
+                )
+            else:
+                qs.filter(
+                    group=obj.group,
+                    # order__lt=new_order,
+                    order__gte=obj.order,
+                ).exclude(
+                    pk=obj.pk,
+                ).update(
+                    order=F('order') - 1,
+                )
+
+            obj.order = new_order
+            obj.save()
+
     def create(self, **kwargs):
         instance = self.model(**kwargs)
 
@@ -37,7 +66,8 @@ class TaskManager(models.Manager):
 
         with transaction.atomic():
 
-            if obj.toDo.pk != toDo.pk:  # nesse momento é inserido o novo item, incrementando os demais
+            if obj.toDo.pk != toDo.pk:
+                # é inserido o novo item, incrementando os demais
                 print("entrou")
                 qs.filter(
                     toDo=obj.toDo.pk,
@@ -130,7 +160,7 @@ class TaskManager(models.Manager):
             instance.save()
             return instance
 
-    def delete(self, **kwargs):
+    """def delete(self, **kwargs):
         instance = self.model(**kwargs)
 
         with transaction.atomic():
@@ -146,4 +176,4 @@ class TaskManager(models.Manager):
 
             instance.delete()
             print()
-            return {"instance deleted"}
+            return {"instance deleted"}"""
