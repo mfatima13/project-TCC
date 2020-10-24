@@ -15,6 +15,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny
     ]
+    filter_fields = ('members', )
 
     @action(detail=True, methods=['get'])
     def listTeams(self):
@@ -52,6 +53,9 @@ class TeamViewSet(viewsets.ModelViewSet):
 class MembersViewSet(viewsets.ModelViewSet):
     queryset = Membership.objects.all()
     serializer_class = MembershipSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny
+    ]
     filter_backends = (DjangoFilterBackend, )
     filter_fields = ('team', 'user', )
 
@@ -60,11 +64,19 @@ class MembersViewSet(viewsets.ModelViewSet):
 
         return Response(2+2, status=status.HTTP_200_OK)
 
-    # @action(detail=True, methods=['get'])
-    def members_list(self, request, pk, format=None):
-        print("aqui oh")
-        data = Membership.objects.get()
-        return Response(data, status=status.HTTP_201_CREATED)
+    @action(methods=['get', ], detail=False)
+    def teams(self, request):
+
+        # get id user from query params
+        user = request.query_params.get('user')
+        # filter teams ids where user has relation
+        members = self.queryset.filter(user=user).values()
+        # filter teams by ids with pk__in
+        teams = Team.objects.filter(pk__in=members.values_list('team_id'))
+
+        teamsList = TeamSerializer(teams, many=True)
+
+        return Response(teamsList.data, status=status.HTTP_200_OK)
 
     # @action(detail=True, methods=['post'], )
     def members_create(self, request, format=None):

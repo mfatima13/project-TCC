@@ -10,5 +10,4 @@ router.register('members', views.MembersViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    
 ]

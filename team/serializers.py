@@ -18,16 +18,18 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class MembershipSerializer(serializers.ModelSerializer):
-    # user = serializers.StringRelatedField(many=True, read_only=False)
-    # team = serializers.StringRelatedField(many=True, read_only=True, )
+    # user = CustomUserSerializer(many=True, read_only=True)
+    # team = TeamSerializer(many=True, read_only=True, )
+    """team = serializers.SlugRelatedField(
+        many=False,
+        read_only=True,
+        slug_field='name',
+    )"""
 
     class Meta:
         model = Membership
         fields = [
             'id',
-            'team',
             'user',
+            'team'
         ]
-
-    def update(self, validated_data):
-        pass
