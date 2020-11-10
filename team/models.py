@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import CustomUser
+from users.models import CustomUser
 
 
 class Team(models.Model):  # mudar nomeclaturas para project

@@ -37,17 +37,28 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # django rest framework
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
 
     'django.contrib.sites',
+    # for social login
+
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+
     'corsheaders',
 
     'team',
     'project',
-    'account.apps.AccountConfig',
+    'users.apps.UsersConfig',
 ]
 
-AUTH_USER_MODEL = 'account.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 SITE_ID = 1
 
@@ -119,7 +130,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # REST
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
 }
 
 # Internationalization
@@ -134,6 +155,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Definições para envio de email
+# DEFAULT_FROM_EMAIL = 'maria.defatimabarbosacardoso@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'django.aplicacaoapp@gmail.com'
+EMAIL_HOST_PASSWORD = 'django8000'
+EMAIL_USE_TLS = True
+SERVER_EMAIL = 'sistema@django.com'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -152,5 +182,6 @@ CORS_ALLOW_HEADERS = [
     'origin',
     'user-agent',
     'x-csrftoken',
+    'xcsrftoken',
     'x-requested-with',
 ]

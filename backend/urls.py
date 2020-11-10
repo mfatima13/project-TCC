@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Create a router and register our viewsets with it.
-#router = DefaultRouter()
+# router = DefaultRouter()
 
 urlpatterns = [
-    path('accounts-api/', include('account.urls')),
+    path('users-api/', include('users.urls')),
     path('team-api/', include('team.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('project-api/', include('project.urls')),
     path('admin/', admin.site.urls),
 ]

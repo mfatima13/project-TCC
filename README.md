@@ -14,16 +14,19 @@ Projeto de TCC onde desenvolvi um sistema de gerenciamento de projetos baseado e
 ## Features
 
 - [x] Cadastro de usuário
-- [ ] Cadastro de projetos
-- [ ] Cadastro de listas de tarefas
-- [ ] Cadastro de tarefas 
-- [ ] Movimentar listas de tarefas para diferentes ordens (DragInDrop)
-- [ ] Movimentar as tarefas em direfentes posições e diferentes listas (DragInDrop)
+- [x] Implementação do login
+- [x] Implementar registro de usuários
+- [x] Cadastro de projetos
+- [x] Cadastro de listas de tarefas
+- [x] Cadastro de tarefas 
+- [x] Movimentar listas de tarefas para diferentes ordens (DragInDrop)
+- [x] Movimentar as tarefas em direfentes posições e diferentes listas (DragInDrop)
 
 ## Tecnologias
 
 * Python 3.8.5 <br>
 * Django 3.0.5
+* Django rest frmework 3.11
 
 ## Instalação
 
