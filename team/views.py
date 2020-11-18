@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from django_filters.rest_framework import DjangoFilterBackend
+# from rest_framework.
 
 from .models import Team, Membership
 
@@ -13,7 +14,8 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all().order_by('-create_date', '-modify_date')
     serializer_class = TeamSerializer
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny
+        # permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny
     ]
     filter_fields = ('members', )
 
@@ -54,7 +56,8 @@ class MembersViewSet(viewsets.ModelViewSet):
     queryset = Membership.objects.all()
     serializer_class = MembershipSerializer
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, permissions.AllowAny
+        # permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny
     ]
     filter_backends = (DjangoFilterBackend, )
     filter_fields = ('team', 'user', )
@@ -68,7 +71,15 @@ class MembersViewSet(viewsets.ModelViewSet):
     def teams(self, request):
 
         # get id user from query params
-        user = request.query_params.get('user')
+        # user = request.query_params.get('user')
+
+        print(request.user)
+        user = request.user
+        # print(request.headers.get('Token'))
+        # user = Token.objects.get(user)
+        # print(user)
+
+        # if user.exists(): user = user.last().user
         # filter teams ids where user has relation
         members = self.queryset.filter(user=user).values()
         # filter teams by ids with pk__in
