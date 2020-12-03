@@ -30,32 +30,33 @@ Projeto de TCC onde desenvolvi um sistema de gerenciamento de projetos baseado e
 
 ## Instalação
 Clone o repositório:
-git clone https://github.com/mfatima13/project-TCC.git
-Entra na pasta do projeto:
-cd project-TCC/
-Crie o ambiente virtual com o seguinte comando:
-python -m venv venv
-Ativa o ambiente:
-no windows: ./venv/Scripts/activate
-no linux: source /Scrpts/bin/activate
 
-Quando ativar agora é so baixar as dependências com o seguinte comando:
-pip install -r ./requirements.txt
+` > git clone https://github.com/mfatima13/project-TCC.git `
+
+Entra na pasta do projeto:
+
+` > cd project-TCC/ `
+
+Crie o ambiente virtual com o seguinte comando:
+
+` > python -m venv venv `
+
+Ativa o ambiente:
+
+no windows:  ` > ./venv/Scripts/activate`
+
+no linux: ` # source venv/bin/activate`
+
+Agora é so baixar as dependências com o seguinte comando:
+
+` > pip install -r ./requirements.txt `
+
 Agora é só rodar o servidor: 
-python manage.py runserver
+
+``` > python manage.py runserver ```
 
 ## Rotas da aplicação:
 
-`Admin` -> 'admin/'
+* Admin -> `localhost:8000/admin/`
 
-Accounts:
-"accounts-api/"
-list and crieate -> "accounts-api/users/"
-
-update and delite -> "accounts-api/update"
-
-Team:
-'team-api/'
-
-Project:
-'project-api/'
+Acesse esse ![arquivo](/Insomnia_2020-12-03.json) de rotas do Insominia para testar as rotas!
