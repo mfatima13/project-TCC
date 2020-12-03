@@ -29,6 +29,20 @@ Projeto de TCC onde desenvolvi um sistema de gerenciamento de projetos baseado e
 * Django rest frmework 3.11
 
 ## Instalação
+Clone o repositório:
+git clone https://github.com/mfatima13/project-TCC.git
+Entra na pasta do projeto:
+cd project-TCC/
+Crie o ambiente virtual com o seguinte comando:
+python -m venv venv
+Ativa o ambiente:
+no windows: ./venv/Scripts/activate
+no linux: source /Scrpts/bin/activate
+
+Quando ativar agora é so baixar as dependências com o seguinte comando:
+pip install -r ./requirements.txt
+Agora é só rodar o servidor: 
+python manage.py runserver
 
 ## Rotas da aplicação:
 
