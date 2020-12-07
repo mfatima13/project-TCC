@@ -1,7 +1,9 @@
 import os
 from decouple import config
 # from unipath import Path
-from dj_database_url import parse as db_url
+from dj_database_url import parse as dburl
+import dj_database_url
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -85,14 +87,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+# default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 
-# default_dburl = 'postgres://postgres:admin8000@127.0.0.1:5432/tcc'
+default_dburl = 'postgres://postgres:admin8000@127.0.0.1:5432/tcc'
 
 DATABASES = {
     'default':
-        config('DATABASE_URL', default=default_dburl, cast=db_url),
+        config('DATABASE_URL', default=default_dburl, cast=dburl),
 }
+
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
