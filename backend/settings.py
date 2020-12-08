@@ -1,7 +1,9 @@
 import os
 from decouple import config
-from unipath import Path
-from dj_database_url import parse as db_url
+# from unipath import Path
+from dj_database_url import parse as dburl
+import dj_database_url
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,9 +16,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['ksproject-api.herokuapp.com/', 'localhost']
+ALLOWED_HOSTS = ['ksproject-api.herokuapp.com', 'localhost']
 
 # Application definition
 
@@ -85,12 +87,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+# default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+
+default_dburl = 'postgres://postgres:admin8000@127.0.0.1:5432/tcc'
 
 DATABASES = {
     'default':
-        config('DATABASE_URL', default=default_dburl, cast=db_url),
+        config('DATABASE_URL', default=default_dburl, cast=dburl),
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -149,6 +156,8 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 
