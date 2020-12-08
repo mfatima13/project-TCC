@@ -89,9 +89,8 @@ class MembersViewSet(viewsets.ModelViewSet):
 
         return Response(teamsList.data, status=status.HTTP_200_OK)
 
-    # @action(detail=True, methods=['post'], )
+    @action(methods=['post'], detail=True, )
     def members_create(self, request, format=None):
-        print("\nmembers create")
         serializer = MembershipSerializer(data=request.data)
 
         if serializer.is_valid():
