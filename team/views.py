@@ -89,10 +89,30 @@ class MembersViewSet(viewsets.ModelViewSet):
 
         return Response(teamsList.data, status=status.HTTP_200_OK)
 
-    @action(methods=['post'], detail=True, )
-    def members_create(self, request, format=None):
-        serializer = MembershipSerializer(data=request.data)
+    @action(methods=['post', ], detail=False)
+    def membership(self, request, format=None):
+        user = request.user
+        team = request.data.get('team')
+        data = {
+            'team': team,
+            'user': user.id,
+        }
 
+        print(data)
+        serializer = MembershipSerializer(data=data)
+        # serializer = MembershipSerializer(data=request.data)
+        print(serializer)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['post', ], detail=False)
+    def multiples_membership(self, request, format=None):
+       
+        serializer = MembershipSerializer(data=request.data)
+        # serializer = MembershipSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_200_OK)
