@@ -6,3 +6,4 @@
 .sqlite3
 .env
 *.py[cod]
+__pycache__/
