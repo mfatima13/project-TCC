@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+# default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 
-# default_dburl = 'postgres://postgres:admin8000@127.0.0.1:5432/tcc'
+default_dburl = 'postgres://postgres:admin8000@127.0.0.1:5432/tcc'
 
 DATABASES = {
     'default':
